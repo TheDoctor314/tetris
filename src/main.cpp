@@ -30,7 +30,7 @@ int main() {
 
     auto previous_time = std::chrono::steady_clock::now();
     unsigned lag = 0;
-    const unsigned frame_duration = 16667;
+    unsigned ticks = 0;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -60,34 +60,38 @@ int main() {
 
         while (lag > frame_duration) {
             lag -= frame_duration;
+            ticks += 1;
 
-            mino.translate(0, 1);
-
-            window.clear();
-
-            for (auto &point : mino.get_blocks()) {
-                auto x = cell_width * point.x;
-                auto y = cell_width * point.y;
+            if (ticks == fall_ticks) {
+                if (!mino.move_down(grid)) {
+                    mino.update(grid);
 
                 shape.setPosition(x, y);
                 window.draw(shape);
             }
 
-            for (int y = 0; y < 20; y++) {
-                for (int x = 0; x < 10; x++) {
-                    if (grid(x, y)) {
-                        auto x_coord = cell_width * x;
-                        auto y_coord = cell_height * y;
+            window.clear();
 
-                        shape.setPosition(x_coord, y_coord);
-                        window.draw(shape);
-                    }
-                }
-            }
+            mino.draw(window, shape);
+            draw_grid(grid, window, shape);
 
             window.display();
         }
     }
 
     return 0;
+}
+
+void draw_grid(GameGrid &grid, sf::RenderWindow &window, sf::Shape &shape) {
+    for (std::size_t y = 0; y < grid.rows(); y++) {
+        for (std::size_t x = 0; x < grid.columns(); x++) {
+            if (grid(x, y)) {
+                auto x_coord = cell_width * x;
+                auto y_coord = cell_height * y;
+
+                shape.setPosition(x_coord, y_coord);
+                window.draw(shape);
+            }
+        }
+    }
 }

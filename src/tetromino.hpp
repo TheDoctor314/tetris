@@ -19,8 +19,12 @@ class Tetromino {
 
     void update(GameGrid &grid);
     void translate(int x, int y);
+    // returns false if it can't move down
+    bool move_down(const GameGrid &grid);
 
     Points &get_blocks() { return m_points; }
+
+    void draw(sf::RenderWindow &window, sf::Shape &shape);
 
   private:
     Points m_points;
