@@ -1,18 +1,15 @@
 #include <SFML/Graphics.hpp>
 #include <chrono>
+#include <random>
 
 #include "grid.hpp"
 #include "tetromino.hpp"
 
 using namespace tetris;
 
+void draw_grid(GameGrid &grid, sf::RenderWindow &window, sf::Shape &shape);
+
 int main() {
-    const int cell_width = 25;
-    const int cell_height = 25;
-
-    // const int game_width = 800;
-    // const int game_height = 600;
-
     sf::RenderWindow window(
         sf::VideoMode(cols * cell_width * 2, rows * cell_height * 2), "Tetris");
     window.setVerticalSyncEnabled(true);

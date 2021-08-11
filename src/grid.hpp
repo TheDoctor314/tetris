@@ -3,6 +3,8 @@
 #include <array>
 #include <cassert>
 
+#include "constants.hpp"
+
 namespace tetris {
 template<typename T, std::size_t cols_, std::size_t rows_>
 class Grid {
@@ -42,9 +44,6 @@ class Grid {
   private:
     std::array<value_type, cols_ * rows_> m_data{};
 };
-
-const int cols = 10;
-const int rows = 20;
 
 using GameGrid = Grid<bool, cols, rows>;
 } // namespace tetris
