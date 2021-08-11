@@ -1,7 +1,7 @@
 #include "tetromino.hpp"
 
 namespace tetris {
-std::array<sf::Vector2i, 4> get_points(TetriType type, int x, int y) {
+std::array<sf::Vector2i, 4> get_points(TetriType type, sf::Vector2i top_left) {
     using sf::Vector2i;
     std::array<Vector2i, 4> ret{};
 
@@ -65,7 +65,7 @@ std::array<sf::Vector2i, 4> get_points(TetriType type, int x, int y) {
     }
 
     for (auto &pos : ret) {
-        pos += Vector2i(x, y);
+        pos += top_left;
     }
 
     return ret;
@@ -86,7 +86,7 @@ void Tetromino::translate(int x, int y) {
 bool Tetromino::move_down(const GameGrid &grid) {
     const int rows = grid.rows();
 
-    for (auto &point : m_points) {
+    for (const auto &point : m_points) {
         if (point.y + 1 == rows) {
             return false;
         }
@@ -101,7 +101,40 @@ bool Tetromino::move_down(const GameGrid &grid) {
     return true;
 }
 
-void Tetromino::draw(sf::RenderWindow &window, sf::Shape &shape) {
+void Tetromino::move_left(const GameGrid &grid) {
+    for (const auto &point : m_points) {
+        if (point.x - 1 < 0) {
+            return;
+        }
+
+        if (grid(point.x - 1, point.y)) {
+            return;
+        }
+    }
+
+    for (auto &point : m_points) {
+        point.x--;
+    }
+}
+void Tetromino::move_right(const GameGrid &grid) {
+    const int cols = grid.columns();
+
+    for (const auto &point : m_points) {
+        if (point.x + 1 > cols) {
+            return;
+        }
+
+        if (grid(point.x + 1, point.y)) {
+            return;
+        }
+    }
+
+    for (auto &point : m_points) {
+        point.x++;
+    }
+}
+
+void Tetromino::draw(sf::RenderWindow &window, sf::Shape &shape) const {
     for (auto &point : m_points) {
         auto x = cell_width * point.x;
         auto y = cell_width * point.y;
