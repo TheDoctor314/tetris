@@ -24,9 +24,18 @@ int main() {
     shape.setOutlineColor(sf::Color::Black);
     shape.setOutlineThickness(-1);
 
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<> dist(0, 6);
+
     GameGrid grid{};
 
-    auto mino = Tetromino{TetriType::Z, 0, 0};
+    auto get_next_shape = [](auto &dist, auto &rng) {
+        return static_cast<TetriType>(dist(rng));
+    };
+
+    auto mino = Tetromino{get_next_shape(dist, rng), 0, 0};
+    auto next_shape = get_next_shape(dist, rng);
 
     auto previous_time = std::chrono::steady_clock::now();
     unsigned lag = 0;
@@ -66,8 +75,13 @@ int main() {
                 if (!mino.move_down(grid)) {
                     mino.update(grid);
 
-                shape.setPosition(x, y);
-                window.draw(shape);
+                    // FIXME: Improve on this
+                    // What if there is already a tetromino at the spawn
+                    // location?
+                    mino = Tetromino{next_shape, 0, 0};
+                    next_shape = get_next_shape(dist, rng);
+                }
+                ticks = 0;
             }
 
             window.clear();

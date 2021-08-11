@@ -82,4 +82,32 @@ void Tetromino::translate(int x, int y) {
         point += sf::Vector2i(x, y);
     }
 }
+
+bool Tetromino::move_down(const GameGrid &grid) {
+    const int rows = grid.rows();
+
+    for (auto &point : m_points) {
+        if (point.y + 1 == rows) {
+            return false;
+        }
+        if (grid(point.x, point.y + 1)) {
+            return false;
+        }
+    }
+
+    for (auto &point : m_points) {
+        point.y += 1;
+    }
+    return true;
+}
+
+void Tetromino::draw(sf::RenderWindow &window, sf::Shape &shape) {
+    for (auto &point : m_points) {
+        auto x = cell_width * point.x;
+        auto y = cell_width * point.y;
+
+        shape.setPosition(x, y);
+        window.draw(shape);
+    }
+}
 } // namespace tetris
