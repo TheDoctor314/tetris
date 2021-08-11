@@ -1,12 +1,12 @@
 #pragma once
 
 namespace tetris {
-const int cols = 10;
-const int rows = 20;
+inline const int cols = 10;
+inline const int rows = 20;
 
-const int cell_width = 25;
-const int cell_height = 25;
+inline const int cell_width = 25;
+inline const int cell_height = 25;
 
-const unsigned frame_duration = 16667;
-const unsigned fall_ticks = 30;
+inline const unsigned frame_duration = 16667;
+inline const unsigned fall_ticks = 30;
 } // namespace tetris
