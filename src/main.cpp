@@ -34,26 +34,46 @@ int main() {
         return static_cast<TetriType>(dist(rng));
     };
 
-    auto mino = Tetromino{get_next_shape(dist, rng), 0, 0};
+    auto starting_point = sf::Vector2i(cols / 2 - 2, 0);
+
+    auto mino = Tetromino{get_next_shape(dist, rng), starting_point};
     auto next_shape = get_next_shape(dist, rng);
 
     auto previous_time = std::chrono::steady_clock::now();
     unsigned lag = 0;
-    unsigned ticks = 0;
+    unsigned fall_ticker = 0;
+
+    unsigned move_ticker = 0;
+    const unsigned move_ticks = 10;
 
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
             switch (event.type) {
                 using sf::Event;
+                using sf::Keyboard;
 
             case Event::Closed:
                 window.close();
                 break;
             case Event::KeyPressed:
-                using sf::Keyboard;
-                if (event.key.code == Keyboard::Q)
+                switch (event.key.code) {
+                case Keyboard::Q:
                     window.close();
+                    break;
+                default:
+                    break;
+                }
+                break;
+            case Event::KeyReleased:
+                switch (event.key.code) {
+                case Keyboard::Left:
+                case Keyboard::Right:
+                    move_ticker = 0;
+                    break;
+                default:
+                    break;
+                }
                 break;
             default:
                 break;
@@ -69,28 +89,40 @@ int main() {
 
         while (lag > frame_duration) {
             lag -= frame_duration;
-            ticks += 1;
+            fall_ticker += 1;
+            move_ticker += 1;
 
-            if (ticks == fall_ticks) {
+            if (fall_ticker == fall_ticks) {
                 if (!mino.move_down(grid)) {
                     mino.update(grid);
 
                     // FIXME: Improve on this
                     // What if there is already a tetromino at the spawn
                     // location?
-                    mino = Tetromino{next_shape, 0, 0};
+                    mino = Tetromino{next_shape, starting_point};
                     next_shape = get_next_shape(dist, rng);
                 }
-                ticks = 0;
+                fall_ticker = 0;
             }
 
-            window.clear();
+            if (move_ticker == move_ticks) {
+                using sf::Keyboard;
 
-            mino.draw(window, shape);
-            draw_grid(grid, window, shape);
-
-            window.display();
+                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                    mino.move_left(grid);
+                } else if (Keyboard::isKeyPressed(Keyboard::Right)) {
+                    mino.move_right(grid);
+                }
+                move_ticker = 0;
+            }
         }
+
+        window.clear();
+
+        mino.draw(window, shape);
+        draw_grid(grid, window, shape);
+
+        window.display();
     }
 
     return 0;
