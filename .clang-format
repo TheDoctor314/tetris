@@ -1,0 +1,18 @@
+Language: Cpp
+BasedOnStyle: LLVM
+SpaceAfterTemplateKeyword: false
+AlignConsecutiveMacros: Consecutive
+AlignEscapedNewlines: true
+AlignTrailingComments: true
+BreakBeforeInheritanceComma: true
+BreakConstructorInitializers: BeforeComma
+IndentPPDirectives: AfterHash
+BreakBeforeBraces: Attach
+BraceWrapping:
+    AfterFunction: true
+NamespaceIndentation: Inner
+FixNamespaceComments: true
+PointerAlignment: Right
+SpaceInEmptyBlock: false
+IndentWidth: 4
+AlwaysBreakTemplateDeclarations: Yes
