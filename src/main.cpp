@@ -9,6 +9,12 @@ using namespace tetris;
 
 void draw_grid(GameGrid &grid, sf::RenderWindow &window, sf::Shape &shape);
 
+enum class Move {
+    None,
+    Left,
+    Right,
+};
+
 int main() {
     sf::RenderWindow window(
         sf::VideoMode(cols * cell_width * 2, rows * cell_height * 2), "Tetris");
@@ -46,6 +52,8 @@ int main() {
     unsigned move_ticker = 0;
     const unsigned move_ticks = 10;
 
+    auto movement = Move::None;
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -61,6 +69,12 @@ int main() {
                 case Keyboard::Q:
                     window.close();
                     break;
+                case Keyboard::Left:
+                    movement = Move::Left;
+                    break;
+                case Keyboard::Right:
+                    movement = Move::Right;
+                    break;
                 default:
                     break;
                 }
@@ -70,6 +84,7 @@ int main() {
                 case Keyboard::Left:
                 case Keyboard::Right:
                     move_ticker = 0;
+                    movement = Move::None;
                     break;
                 default:
                     break;
@@ -108,11 +123,18 @@ int main() {
             if (move_ticker == move_ticks) {
                 using sf::Keyboard;
 
-                if (Keyboard::isKeyPressed(Keyboard::Left)) {
+                switch (movement) {
+                case Move::Left:
                     mino.move_left(grid);
-                } else if (Keyboard::isKeyPressed(Keyboard::Right)) {
+                    break;
+                case Move::Right:
                     mino.move_right(grid);
+                    break;
+                case Move::None:
+                default:
+                    break;
                 }
+
                 move_ticker = 0;
             }
         }
