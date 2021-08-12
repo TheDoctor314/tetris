@@ -120,7 +120,7 @@ void Tetromino::move_right(const GameGrid &grid) {
     const int cols = grid.columns();
 
     for (const auto &point : m_points) {
-        if (point.x + 1 > cols) {
+        if (point.x + 1 >= cols) {
             return;
         }
 
