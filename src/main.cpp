@@ -50,7 +50,6 @@ int main() {
     unsigned fall_ticker = 0;
 
     unsigned move_ticker = 0;
-    const unsigned move_ticks = 10;
 
     auto movement = Move::None;
 
