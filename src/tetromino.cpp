@@ -77,12 +77,6 @@ void Tetromino::update(GameGrid &grid) {
     }
 }
 
-void Tetromino::translate(int x, int y) {
-    for (auto &point : m_points) {
-        point += sf::Vector2i(x, y);
-    }
-}
-
 bool Tetromino::move_down(const GameGrid &grid) {
     const int rows = grid.rows();
 

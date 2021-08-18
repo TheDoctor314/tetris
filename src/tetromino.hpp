@@ -18,7 +18,7 @@ class Tetromino {
         : m_points(get_points(type, top_left)) {}
 
     void update(GameGrid &grid);
-    void translate(int x, int y);
+
     // returns false if it can't move down
     bool move_down(const GameGrid &grid);
 
