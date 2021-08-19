@@ -110,6 +110,12 @@ int main() {
             fall_ticker += 1;
             move_ticker += 1;
 
+            if (input.rotate) {
+                auto clockwise = input.rotate.value() == Rotate::CW;
+                mino.rotate(clockwise, grid);
+                input.rotate = {};
+            }
+
             if (fall_ticker == fall_ticks) {
                 if (!mino.move_down(grid)) {
                     mino.update(grid);
