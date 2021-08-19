@@ -3,17 +3,12 @@
 #include <random>
 
 #include "grid.hpp"
+#include "input.hpp"
 #include "tetromino.hpp"
 
 using namespace tetris;
 
 void draw_grid(GameGrid &grid, sf::RenderWindow &window, sf::Shape &shape);
-
-enum class Move {
-    None,
-    Left,
-    Right,
-};
 
 int main() {
     sf::RenderWindow window(
@@ -48,10 +43,9 @@ int main() {
     auto previous_time = std::chrono::steady_clock::now();
     unsigned lag = 0;
     unsigned fall_ticker = 0;
-
     unsigned move_ticker = 0;
 
-    auto movement = Move::None;
+    auto input = Input{};
 
     while (window.isOpen()) {
         sf::Event event;
@@ -69,10 +63,16 @@ int main() {
                     window.close();
                     break;
                 case Keyboard::Left:
-                    movement = Move::Left;
+                    input.move = Move::Left;
                     break;
                 case Keyboard::Right:
-                    movement = Move::Right;
+                    input.move = Move::Right;
+                    break;
+                case Keyboard::C:
+                    input.rotate = Rotate::CW;
+                    break;
+                case Keyboard::Z:
+                    input.rotate = Rotate::CounterCW;
                     break;
                 default:
                     break;
@@ -83,7 +83,11 @@ int main() {
                 case Keyboard::Left:
                 case Keyboard::Right:
                     move_ticker = 0;
-                    movement = Move::None;
+                    input.move = {};
+                    break;
+                case Keyboard::C:
+                case Keyboard::Z:
+                    input.rotate = {};
                     break;
                 default:
                     break;
@@ -120,18 +124,17 @@ int main() {
             }
 
             if (move_ticker == move_ticks) {
-                using sf::Keyboard;
-
-                switch (movement) {
-                case Move::Left:
-                    mino.move_left(grid);
-                    break;
-                case Move::Right:
-                    mino.move_right(grid);
-                    break;
-                case Move::None:
-                default:
-                    break;
+                if (input.move) {
+                    switch (input.move.value()) {
+                    case Move::Left:
+                        mino.move_left(grid);
+                        break;
+                    case Move::Right:
+                        mino.move_right(grid);
+                        break;
+                    default:
+                        break;
+                    }
                 }
 
                 move_ticker = 0;
