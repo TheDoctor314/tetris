@@ -161,11 +161,12 @@ int main() {
 void draw_grid(GameGrid &grid, sf::RenderWindow &window, sf::Shape &shape) {
     for (std::size_t y = 0; y < grid.rows(); y++) {
         for (std::size_t x = 0; x < grid.columns(); x++) {
-            if (grid(x, y)) {
+            if (auto block = grid(x, y); block) {
                 auto x_coord = cell_width * x;
                 auto y_coord = cell_height * y;
 
                 shape.setPosition(x_coord, y_coord);
+                shape.setFillColor(get_colour(block.value()));
                 window.draw(shape);
             }
         }

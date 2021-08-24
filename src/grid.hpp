@@ -44,6 +44,4 @@ class Grid {
   private:
     std::array<value_type, cols_ * rows_> m_data{};
 };
-
-using GameGrid = Grid<bool, cols, rows>;
 } // namespace tetris
