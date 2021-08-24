@@ -2,13 +2,18 @@
 
 #include <SFML/Graphics.hpp>
 #include <array>
+#include <optional>
 
 #include "grid.hpp"
 
 namespace tetris {
 enum class TetriType : uint8_t { I, J, L, O, S, T, Z };
 
+sf::Color get_colour(const TetriType type);
+
 std::array<sf::Vector2i, 4> get_points(TetriType type, sf::Vector2i top_left);
+
+using GameGrid = Grid<std::optional<TetriType>, cols, rows>;
 
 class Tetromino {
   public:
