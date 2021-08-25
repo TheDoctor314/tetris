@@ -1,15 +1,5 @@
 #include "tetromino.hpp"
 
-static const std::array<sf::Color, 7> ColourMap = {
-    sf::Color::Cyan,        // I
-    sf::Color::Blue,        // J
-    sf::Color(255, 165, 0), // L
-    sf::Color::Yellow,      // O
-    sf::Color::Green,       // S
-    sf::Color::Magenta,     // T
-    sf::Color::Red,         // Z
-};
-
 namespace tetris {
 std::array<sf::Vector2i, 4> get_points(TetriType type, sf::Vector2i top_left) {
     using sf::Vector2i;
@@ -190,9 +180,5 @@ void Tetromino::draw(sf::RenderWindow &window, sf::Shape &shape) const {
         shape.setPosition(x, y);
         window.draw(shape);
     }
-}
-
-inline sf::Color get_colour(const TetriType type) {
-    return ColourMap[static_cast<size_t>(type)];
 }
 } // namespace tetris
