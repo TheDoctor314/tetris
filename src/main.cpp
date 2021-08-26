@@ -21,7 +21,6 @@ int main() {
     window.setView(grid_view);
 
     sf::RectangleShape shape{sf::Vector2f(cell_width, cell_height)};
-    shape.setFillColor(sf::Color::Green);
     shape.setOutlineColor(sf::Color::Black);
     shape.setOutlineThickness(-1);
 
@@ -31,14 +30,14 @@ int main() {
 
     GameGrid grid{};
 
-    auto get_next_shape = [](auto &dist, auto &rng) {
+    auto get_next_shape = [&dist, &rng] {
         return static_cast<TetriType>(dist(rng));
     };
 
     auto starting_point = sf::Vector2i(cols / 2 - 2, 0);
 
-    auto mino = Tetromino{get_next_shape(dist, rng), starting_point};
-    auto next_shape = get_next_shape(dist, rng);
+    auto mino = Tetromino{get_next_shape(), starting_point};
+    auto next_shape = get_next_shape();
 
     auto previous_time = std::chrono::steady_clock::now();
     unsigned lag = 0;
@@ -124,7 +123,7 @@ int main() {
                     // What if there is already a tetromino at the spawn
                     // location?
                     mino = Tetromino{next_shape, starting_point};
-                    next_shape = get_next_shape(dist, rng);
+                    next_shape = get_next_shape();
                 }
                 fall_ticker = 0;
             }
