@@ -44,6 +44,9 @@ int main() {
     unsigned fall_ticker = 0;
     unsigned move_ticker = 0;
 
+    unsigned clear_effect_timer = 0;
+    std::array<bool, grid.rows()> lines_to_clear{};
+
     auto input = Input{};
 
     while (window.isOpen()) {
@@ -109,6 +112,23 @@ int main() {
             fall_ticker += 1;
             move_ticker += 1;
 
+            if (clear_effect_timer != 0) {
+                --clear_effect_timer;
+
+                if (clear_effect_timer == 0) {
+                    for (int y = grid.rows() - 1; y >= 0; --y) {
+                        if (lines_to_clear[y]) {
+                            for (std::size_t x = 0; x < grid.columns(); ++x) {
+                                grid(x, y) = {};
+                            }
+
+                            lines_to_clear[y] = false;
+                        }
+                    }
+                }
+                continue;
+            }
+
             if (input.rotate) {
                 auto clockwise = input.rotate.value() == Rotate::CW;
                 mino.rotate(clockwise, grid);
@@ -123,9 +143,24 @@ int main() {
                     // What if there is already a tetromino at the spawn
                     // location?
                     mino = Tetromino{next_shape, starting_point};
-                    next_shape = get_next_shape();
+                    next_shape = TetriType::I;
                 }
                 fall_ticker = 0;
+
+                for (int y = grid.rows() - 1; y >= 0; --y) {
+                    bool clear_line = true;
+                    for (std::size_t x = 0; x < grid.columns(); ++x) {
+                        if (!grid(x, y)) {
+                            clear_line = false;
+                            break;
+                        }
+                    }
+
+                    if (clear_line) {
+                        lines_to_clear[y] = true;
+                        clear_effect_timer = 8;
+                    }
+                }
             }
 
             if (move_ticker == move_ticks) {
