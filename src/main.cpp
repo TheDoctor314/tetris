@@ -212,11 +212,21 @@ void clear_line(GameGrid &grid, std::size_t line) {
     }
 }
 
+void shift_lines(GameGrid &grid, const std::size_t line) {
+    for (auto y = line; y > 0; --y) {
+        for (std::size_t x = 0; x < grid.columns(); ++x) {
+            std::swap(grid(x, y), grid(x, y - 1));
+        }
+    }
+}
+
 template<std::size_t SIZE>
 void clear_lines(GameGrid &grid, const std::array<bool, SIZE> lines_to_clear) {
     for (int y = grid.rows() - 1; y >= 0; --y) {
         if (lines_to_clear[y]) {
             clear_line(grid, y);
+
+            shift_lines(grid, y);
         }
     }
 }
