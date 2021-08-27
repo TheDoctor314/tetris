@@ -25,7 +25,7 @@ inline sf::Color get_colour(const TetriType type) {
 
 std::array<sf::Vector2i, 4> get_points(TetriType type, sf::Vector2i top_left);
 
-using GameGrid = Grid<std::optional<TetriType>, cols, rows>;
+using GameGrid = Grid<std::optional<TetriType>, COLS, ROWS>;
 
 class Tetromino {
   public:

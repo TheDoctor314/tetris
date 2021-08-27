@@ -174,8 +174,8 @@ void Tetromino::draw(sf::RenderWindow &window, sf::Shape &shape) const {
     shape.setFillColor(get_colour(m_shape));
 
     for (auto &point : m_points) {
-        auto x = cell_width * point.x;
-        auto y = cell_width * point.y;
+        auto x = CELL_WIDTH * point.x;
+        auto y = CELL_WIDTH * point.y;
 
         shape.setPosition(x, y);
         window.draw(shape);

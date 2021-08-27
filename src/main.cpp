@@ -12,15 +12,15 @@ void draw_grid(GameGrid &grid, sf::RenderWindow &window, sf::Shape &shape);
 
 int main() {
     sf::RenderWindow window(
-        sf::VideoMode(cols * cell_width * 2, rows * cell_height * 2), "Tetris");
+        sf::VideoMode(COLS * CELL_WIDTH * 2, ROWS * CELL_HEIGHT * 2), "Tetris");
     window.setVerticalSyncEnabled(true);
 
     auto grid_view =
-        sf::View(sf::FloatRect(0, 0, cols * cell_width, rows * cell_height));
+        sf::View(sf::FloatRect(0, 0, COLS * CELL_WIDTH, ROWS * CELL_HEIGHT));
 
     window.setView(grid_view);
 
-    sf::RectangleShape shape{sf::Vector2f(cell_width, cell_height)};
+    sf::RectangleShape shape{sf::Vector2f(CELL_WIDTH, CELL_HEIGHT)};
     shape.setOutlineColor(sf::Color::Black);
     shape.setOutlineThickness(-1);
 
@@ -34,7 +34,7 @@ int main() {
         return static_cast<TetriType>(dist(rng));
     };
 
-    auto starting_point = sf::Vector2i(cols / 2 - 2, 0);
+    auto starting_point = sf::Vector2i(COLS / 2 - 2, 0);
 
     auto mino = Tetromino{get_next_shape(), starting_point};
     auto next_shape = get_next_shape();
@@ -107,8 +107,8 @@ int main() {
         lag += delta_time;
         previous_time += std::chrono::microseconds(delta_time);
 
-        while (lag > frame_duration) {
-            lag -= frame_duration;
+        while (lag > FRAME_DURATION) {
+            lag -= FRAME_DURATION;
             fall_ticker += 1;
             move_ticker += 1;
 
@@ -135,7 +135,7 @@ int main() {
                 input.rotate = {};
             }
 
-            if (fall_ticker == fall_ticks) {
+            if (fall_ticker == FALL_TICKS) {
                 if (!mino.move_down(grid)) {
                     mino.update(grid);
 
@@ -156,14 +156,14 @@ int main() {
 
                         if (clear_line) {
                             lines_to_clear[y] = true;
-                            clear_effect_timer = clear_effect_duration;
+                            clear_effect_timer = CLEAR_EFFECT_DURATION;
                         }
                     }
                 }
                 fall_ticker = 0;
             }
 
-            if (move_ticker == move_ticks) {
+            if (move_ticker == MOVE_TICKS) {
                 if (input.move) {
                     switch (input.move.value()) {
                     case Move::Left:
@@ -196,8 +196,8 @@ void draw_grid(GameGrid &grid, sf::RenderWindow &window, sf::Shape &shape) {
     for (std::size_t y = 0; y < grid.rows(); y++) {
         for (std::size_t x = 0; x < grid.columns(); x++) {
             if (auto block = grid(x, y); block) {
-                auto x_coord = cell_width * x;
-                auto y_coord = cell_height * y;
+                auto x_coord = CELL_WIDTH * x;
+                auto y_coord = CELL_HEIGHT * y;
 
                 shape.setPosition(x_coord, y_coord);
                 shape.setFillColor(get_colour(block.value()));
