@@ -144,23 +144,23 @@ int main() {
                     // location?
                     mino = Tetromino{next_shape, starting_point};
                     next_shape = TetriType::I;
-                }
-                fall_ticker = 0;
 
-                for (int y = grid.rows() - 1; y >= 0; --y) {
-                    bool clear_line = true;
-                    for (std::size_t x = 0; x < grid.columns(); ++x) {
-                        if (!grid(x, y)) {
-                            clear_line = false;
-                            break;
+                    for (int y = grid.rows() - 1; y >= 0; --y) {
+                        bool clear_line = true;
+                        for (std::size_t x = 0; x < grid.columns(); ++x) {
+                            if (!grid(x, y)) {
+                                clear_line = false;
+                                break;
+                            }
+                        }
+
+                        if (clear_line) {
+                            lines_to_clear[y] = true;
+                            clear_effect_timer = clear_effect_duration;
                         }
                     }
-
-                    if (clear_line) {
-                        lines_to_clear[y] = true;
-                        clear_effect_timer = 8;
-                    }
                 }
+                fall_ticker = 0;
             }
 
             if (move_ticker == move_ticks) {
