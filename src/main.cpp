@@ -8,7 +8,11 @@
 
 using namespace tetris;
 
-void draw_grid(GameGrid &grid, sf::RenderWindow &window, sf::Shape &shape);
+void draw_grid(const GameGrid &grid, sf::RenderWindow &window,
+               sf::Shape &shape);
+
+template<std::size_t SIZE>
+void clear_lines(GameGrid &grid, const std::array<bool, SIZE> lines_to_clear);
 
 int main() {
     sf::RenderWindow window(
@@ -116,15 +120,8 @@ int main() {
                 --clear_effect_timer;
 
                 if (clear_effect_timer == 0) {
-                    for (int y = grid.rows() - 1; y >= 0; --y) {
-                        if (lines_to_clear[y]) {
-                            for (std::size_t x = 0; x < grid.columns(); ++x) {
-                                grid(x, y) = {};
-                            }
-
-                            lines_to_clear[y] = false;
-                        }
-                    }
+                    clear_lines(grid, lines_to_clear);
+                    lines_to_clear = {};
                 }
                 continue;
             }
@@ -143,7 +140,7 @@ int main() {
                     // What if there is already a tetromino at the spawn
                     // location?
                     mino = Tetromino{next_shape, starting_point};
-                    next_shape = TetriType::I;
+                    next_shape = get_next_shape();
 
                     for (int y = grid.rows() - 1; y >= 0; --y) {
                         bool clear_line = true;
@@ -192,7 +189,8 @@ int main() {
     return 0;
 }
 
-void draw_grid(GameGrid &grid, sf::RenderWindow &window, sf::Shape &shape) {
+void draw_grid(const GameGrid &grid, sf::RenderWindow &window,
+               sf::Shape &shape) {
     for (std::size_t y = 0; y < grid.rows(); y++) {
         for (std::size_t x = 0; x < grid.columns(); x++) {
             if (auto block = grid(x, y); block) {
@@ -203,6 +201,22 @@ void draw_grid(GameGrid &grid, sf::RenderWindow &window, sf::Shape &shape) {
                 shape.setFillColor(get_colour(block.value()));
                 window.draw(shape);
             }
+        }
+    }
+}
+void clear_line(GameGrid &grid, std::size_t line) {
+    assert(line < grid.rows());
+
+    for (std::size_t x = 0; x < grid.columns(); ++x) {
+        grid(x, line) = {};
+    }
+}
+
+template<std::size_t SIZE>
+void clear_lines(GameGrid &grid, const std::array<bool, SIZE> lines_to_clear) {
+    for (int y = grid.rows() - 1; y >= 0; --y) {
+        if (lines_to_clear[y]) {
+            clear_line(grid, y);
         }
     }
 }
