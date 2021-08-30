@@ -11,6 +11,8 @@ using namespace tetris;
 void draw_grid(const GameGrid &grid, sf::RenderWindow &window,
                sf::Shape &shape);
 
+void draw_game_over(sf::RenderWindow &window, sf::Font &font);
+
 template<std::size_t SIZE>
 void clear_lines(GameGrid &grid, const std::array<bool, SIZE> lines_to_clear);
 
@@ -27,6 +29,9 @@ int main() {
     sf::RectangleShape shape{sf::Vector2f(CELL_WIDTH, CELL_HEIGHT)};
     shape.setOutlineColor(sf::Color::Black);
     shape.setOutlineThickness(-1);
+
+    sf::Font font;
+    font.loadFromFile("Roboto-Medium.ttf");
 
     std::random_device dev;
     std::mt19937 rng(dev());
@@ -45,6 +50,8 @@ int main() {
 
     auto previous_time = std::chrono::steady_clock::now();
     unsigned lag = 0;
+
+    bool game_over = false;
     unsigned fall_ticker = 0;
     unsigned move_ticker = 0;
 
@@ -116,6 +123,10 @@ int main() {
             fall_ticker += 1;
             move_ticker += 1;
 
+            if (game_over) {
+                break;
+            }
+
             if (clear_effect_timer != 0) {
                 --clear_effect_timer;
 
@@ -134,6 +145,13 @@ int main() {
 
             if (fall_ticker == FALL_TICKS) {
                 if (!mino.move_down(grid)) {
+
+                    for (const auto &block : mino.get_blocks()) {
+                        if (block.y == 0) {
+                            game_over = true;
+                        }
+                    }
+
                     mino.update(grid);
 
                     // FIXME: Improve on this
@@ -183,6 +201,10 @@ int main() {
         mino.draw(window, shape);
         draw_grid(grid, window, shape);
 
+        if (game_over) {
+            draw_game_over(window, font);
+        }
+
         window.display();
     }
 
@@ -229,4 +251,16 @@ void clear_lines(GameGrid &grid, const std::array<bool, SIZE> lines_to_clear) {
             shift_lines(grid, y);
         }
     }
+}
+
+void draw_game_over(sf::RenderWindow &window, sf::Font &font) {
+    sf::Text text;
+    text.setFont(font);
+
+    text.setString("Game Over!");
+    text.setCharacterSize(25);
+
+    text.setPosition(0, 50);
+
+    window.draw(text);
 }
