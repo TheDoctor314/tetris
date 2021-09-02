@@ -53,36 +53,13 @@ int main() {
                 case Keyboard::Q:
                     window.close();
                     break;
-                case Keyboard::Left:
-                    game.input.move = Move::Left;
-                    break;
-                case Keyboard::Right:
-                    game.input.move = Move::Right;
-                    break;
-                case Keyboard::C:
-                    game.input.rotate = Rotate::CW;
-                    break;
-                case Keyboard::Z:
-                    game.input.rotate = Rotate::CounterCW;
-                    break;
                 default:
+                    game.handle_key_down(event.key.code);
                     break;
                 }
                 break;
             case Event::KeyReleased:
-                switch (event.key.code) {
-                case Keyboard::Left:
-                case Keyboard::Right:
-                    game.move_ticker = 0;
-                    game.input.move = {};
-                    break;
-                case Keyboard::C:
-                case Keyboard::Z:
-                    game.input.rotate = {};
-                    break;
-                default:
-                    break;
-                }
+                game.handle_key_up(event.key.code);
                 break;
             default:
                 break;

@@ -14,6 +14,8 @@ struct Game {
 
   public:
     void update();
+    void handle_key_up(sf::Keyboard::Key);
+    void handle_key_down(sf::Keyboard::Key);
     void draw(sf::RenderWindow &window, sf::Shape &shape, sf::Font &font);
 
   private:

@@ -141,4 +141,42 @@ void Game::draw(sf::RenderWindow &window, sf::Shape &shape, sf::Font &font) {
         draw_game_over(window, font);
     }
 }
+
+void Game::handle_key_up(sf::Keyboard::Key key) {
+    using sf::Keyboard;
+
+    switch (key) {
+    case Keyboard::Left:
+    case Keyboard::Right:
+        move_ticker = 0;
+        input.move = {};
+        break;
+    case Keyboard::C:
+    case Keyboard::Z:
+        input.rotate = {};
+        break;
+    default:
+        break;
+    }
+}
+void Game::handle_key_down(sf::Keyboard::Key key) {
+    using sf::Keyboard;
+
+    switch (key) {
+    case Keyboard::Left:
+        input.move = Move::Left;
+        break;
+    case Keyboard::Right:
+        input.move = Move::Right;
+        break;
+    case Keyboard::C:
+        input.rotate = Rotate::CW;
+        break;
+    case Keyboard::Z:
+        input.rotate = Rotate::CounterCW;
+        break;
+    default:
+        break;
+    }
+}
 } // namespace tetris
