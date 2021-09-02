@@ -16,7 +16,7 @@ struct Game {
     void update();
     void handle_key_up(sf::Keyboard::Key);
     void handle_key_down(sf::Keyboard::Key);
-    void draw(sf::RenderWindow &window, sf::Shape &shape, sf::Font &font);
+    void draw(sf::RenderWindow &window, sf::Shape &shape, sf::Font &font) const;
 
   private:
     std::mt19937 rng{std::random_device{}()};
@@ -40,5 +40,7 @@ struct Game {
     auto get_next_shape() -> TetriType {
         return static_cast<TetriType>(dist(rng));
     }
+
+    void draw_grid(sf::RenderWindow &window, sf::Shape &shape) const;
 };
 } // namespace tetris

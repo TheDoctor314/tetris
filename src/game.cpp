@@ -105,22 +105,6 @@ void Game::update() {
     }
 }
 
-void draw_grid(const GameGrid &grid, sf::RenderWindow &window,
-               sf::Shape &shape) {
-    for (std::size_t y = 0; y < grid.rows(); y++) {
-        for (std::size_t x = 0; x < grid.columns(); x++) {
-            if (auto block = grid(x, y); block) {
-                auto x_coord = CELL_WIDTH * x;
-                auto y_coord = CELL_HEIGHT * y;
-
-                shape.setPosition(x_coord, y_coord);
-                shape.setFillColor(get_colour(block.value()));
-                window.draw(shape);
-            }
-        }
-    }
-}
-
 void draw_game_over(sf::RenderWindow &window, sf::Font &font) {
     sf::Text text;
     text.setFont(font);
@@ -133,12 +117,28 @@ void draw_game_over(sf::RenderWindow &window, sf::Font &font) {
     window.draw(text);
 }
 
-void Game::draw(sf::RenderWindow &window, sf::Shape &shape, sf::Font &font) {
+void Game::draw(sf::RenderWindow &window, sf::Shape &shape,
+                sf::Font &font) const {
     current_mino.draw(window, shape);
-    draw_grid(grid, window, shape);
+    draw_grid(window, shape);
 
     if (game_over) {
         draw_game_over(window, font);
+    }
+}
+
+void Game::draw_grid(sf::RenderWindow &window, sf::Shape &shape) const {
+    for (std::size_t y = 0; y < grid.rows(); y++) {
+        for (std::size_t x = 0; x < grid.columns(); x++) {
+            if (auto block = grid(x, y); block) {
+                auto x_coord = CELL_WIDTH * x;
+                auto y_coord = CELL_HEIGHT * y;
+
+                shape.setPosition(x_coord, y_coord);
+                shape.setFillColor(get_colour(block.value()));
+                window.draw(shape);
+            }
+        }
     }
 }
 
