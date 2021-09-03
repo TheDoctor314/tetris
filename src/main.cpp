@@ -53,6 +53,9 @@ int main() {
                 case Keyboard::Q:
                     window.close();
                     break;
+                case Keyboard::Enter:
+                    game = Game{};
+                    break;
                 default:
                     game.handle_key_down(event.key.code);
                     break;
