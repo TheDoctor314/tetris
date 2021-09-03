@@ -19,6 +19,8 @@ void shift_lines(GameGrid &grid, const std::size_t line) {
 
 template<std::size_t SIZE>
 void clear_lines(GameGrid &grid, const std::array<bool, SIZE> lines_to_clear) {
+    static_assert(ROWS == SIZE);
+
     for (int y = grid.rows() - 1; y >= 0; --y) {
         if (lines_to_clear[y]) {
             clear_line(grid, y);
@@ -29,12 +31,12 @@ void clear_lines(GameGrid &grid, const std::array<bool, SIZE> lines_to_clear) {
 }
 
 void Game::update() {
-    fall_ticker += 1;
-    move_ticker += 1;
-
     if (game_over) {
         return;
     }
+
+    fall_ticker += 1;
+    move_ticker += 1;
 
     if (clear_effect_timer != 0) {
         --clear_effect_timer;
@@ -119,12 +121,13 @@ void draw_game_over(sf::RenderWindow &window, sf::Font &font) {
 
 void Game::draw(sf::RenderWindow &window, sf::Shape &shape,
                 sf::Font &font) const {
-    current_mino.draw(window, shape);
-    draw_grid(window, shape);
-
     if (game_over) {
         draw_game_over(window, font);
+        return;
     }
+
+    current_mino.draw(window, shape);
+    draw_grid(window, shape);
 }
 
 void Game::draw_grid(sf::RenderWindow &window, sf::Shape &shape) const {
