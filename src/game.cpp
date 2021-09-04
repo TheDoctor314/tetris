@@ -24,7 +24,6 @@ void clear_lines(GameGrid &grid, const std::array<bool, SIZE> lines_to_clear) {
     for (int y = grid.rows() - 1; y >= 0; --y) {
         if (lines_to_clear[y]) {
             clear_line(grid, y);
-
             shift_lines(grid, y);
         }
     }
@@ -35,8 +34,9 @@ void Game::update() {
         return;
     }
 
-    fall_ticker += 1;
-    move_ticker += 1;
+    ++fall_ticker;
+    ++move_ticker;
+    soft_drop_ticker = (soft_drop_ticker + 1) % SOFT_DROP_TICKS;
 
     if (clear_effect_timer != 0) {
         --clear_effect_timer;
@@ -52,6 +52,14 @@ void Game::update() {
         auto clockwise = input.rotate.value() == Rotate::CW;
         current_mino.rotate(clockwise, grid);
         input.rotate = {};
+    }
+
+    if (soft_drop_ticker == 0) {
+        if (input.soft_drop_pressed) {
+            if (current_mino.move_down(grid)) {
+                fall_ticker = 0;
+            }
+        }
     }
 
     if (fall_ticker == FALL_TICKS) {
@@ -158,6 +166,9 @@ void Game::handle_key_up(sf::Keyboard::Key key) {
     case Keyboard::Z:
         input.rotate = {};
         break;
+    case Keyboard::Down:
+        input.soft_drop_pressed = false;
+        break;
     default:
         break;
     }
@@ -177,6 +188,9 @@ void Game::handle_key_down(sf::Keyboard::Key key) {
         break;
     case Keyboard::Z:
         input.rotate = Rotate::CounterCW;
+        break;
+    case Keyboard::Down:
+        input.soft_drop_pressed = true;
         break;
     default:
         break;
