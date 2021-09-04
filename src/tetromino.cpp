@@ -71,9 +71,34 @@ std::array<sf::Vector2i, 4> get_points(TetriType type, sf::Vector2i top_left) {
     return ret;
 }
 
-void Tetromino::update(GameGrid &grid) {
+void Tetromino::update(GameGrid &grid) const {
     for (auto [x, y] : m_points) {
         grid.at(x, y) = m_shape;
+    }
+}
+
+void Tetromino::update_ghost(const GameGrid &grid) {
+    m_ghost = m_points;
+    bool can_fall = true;
+
+    int translate_y{};
+    const int rows = grid.rows();
+
+    while (can_fall) {
+        ++translate_y;
+
+        for (auto &[x, y] : m_ghost) {
+            if (const auto new_y = y + translate_y;
+                (new_y == rows) || grid(x, new_y)) {
+                can_fall = false;
+                break;
+            }
+        }
+    }
+
+    --translate_y;
+    for (auto &[x, y] : m_ghost) {
+        y += translate_y;
     }
 }
 
@@ -174,6 +199,23 @@ void Tetromino::draw(sf::RenderWindow &window, sf::Shape &shape) const {
     shape.setFillColor(get_colour(m_shape));
 
     for (auto &point : m_points) {
+        auto x = CELL_WIDTH * point.x;
+        auto y = CELL_WIDTH * point.y;
+
+        shape.setPosition(x, y);
+        window.draw(shape);
+    }
+
+    draw_ghost(window, shape);
+}
+
+void Tetromino::draw_ghost(sf::RenderWindow &window, sf::Shape &shape) const {
+    auto colour = get_colour(m_shape);
+    colour.a = 0x40; // set opacity
+
+    shape.setFillColor(colour);
+
+    for (auto &point : m_ghost) {
         auto x = CELL_WIDTH * point.x;
         auto y = CELL_WIDTH * point.y;
 
