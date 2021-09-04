@@ -62,6 +62,11 @@ void Game::update() {
         }
     }
 
+    if (input.hard_drop_pressed) {
+        current_mino.update_ghost(grid);
+        current_mino.hard_drop();
+    }
+
     if (fall_ticker == FALL_TICKS) {
         if (!current_mino.move_down(grid)) {
 

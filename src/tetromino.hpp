@@ -46,6 +46,8 @@ class Tetromino {
 
     void rotate(const bool clockwise, const GameGrid &grid);
 
+    void hard_drop() { m_points = m_ghost; }
+
     Points &get_blocks() { return m_points; }
 
     void draw(sf::RenderWindow &window, sf::Shape &shape) const;
