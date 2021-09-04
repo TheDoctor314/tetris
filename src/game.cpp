@@ -172,6 +172,9 @@ void Game::handle_key_up(sf::Keyboard::Key key) {
     case Keyboard::Down:
         input.soft_drop_pressed = false;
         break;
+    case Keyboard::Space:
+        input.hard_drop_pressed = false;
+        break;
     default:
         break;
     }
@@ -194,6 +197,9 @@ void Game::handle_key_down(sf::Keyboard::Key key) {
         break;
     case Keyboard::Down:
         input.soft_drop_pressed = true;
+        break;
+    case Keyboard::Space:
+        input.hard_drop_pressed = true;
         break;
     default:
         break;
