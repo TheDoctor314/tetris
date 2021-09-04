@@ -68,6 +68,7 @@ void Game::update() {
             for (const auto &block : current_mino.get_blocks()) {
                 if (block.y == 0) {
                     game_over = true;
+                    return;
                 }
             }
 
@@ -113,6 +114,8 @@ void Game::update() {
 
         move_ticker = 0;
     }
+
+    current_mino.update_ghost(grid);
 }
 
 void draw_game_over(sf::RenderWindow &window, sf::Font &font) {
