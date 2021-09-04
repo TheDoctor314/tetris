@@ -35,7 +35,8 @@ class Tetromino {
         : m_shape(type)
         , m_points(get_points(type, top_left)) {}
 
-    void update(GameGrid &grid);
+    void update(GameGrid &grid) const;
+    void update_ghost(const GameGrid &grid);
 
     // returns false if it can't move down
     bool move_down(const GameGrid &grid);
@@ -50,7 +51,11 @@ class Tetromino {
     void draw(sf::RenderWindow &window, sf::Shape &shape) const;
 
   private:
+    void draw_ghost(sf::RenderWindow &window, sf::Shape &shape) const;
+
+  private:
     TetriType m_shape;
     Points m_points;
+    Points m_ghost;
 };
 } // namespace tetris
