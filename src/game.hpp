@@ -31,6 +31,7 @@ struct Game {
     bool game_over{false};
     unsigned fall_ticker = 0;
     unsigned move_ticker = 0;
+    unsigned soft_drop_ticker = 0;
     unsigned clear_effect_timer = 0;
 
     GameGrid grid;
